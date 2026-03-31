@@ -1,7 +1,7 @@
 package com.company.iam.repository;
 
-import com.company.iam.auth.AuthToken;
-import com.company.iam.auth.AuthTokenType;
+import com.company.iam.entities.AuthToken;
+import com.company.iam.entities.enums.AuthTokenType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

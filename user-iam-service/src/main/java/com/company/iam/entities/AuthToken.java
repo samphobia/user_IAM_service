@@ -1,6 +1,6 @@
-package com.company.iam.auth;
+package com.company.iam.entities;
 
-import com.company.iam.user.User;
+import com.company.iam.entities.enums.AuthTokenType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

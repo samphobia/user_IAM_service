@@ -1,5 +1,8 @@
-package com.company.iam.merchant;
+package com.company.iam.entities;
 
+import com.company.iam.entities.enums.BusinessType;
+import com.company.iam.entities.enums.MerchantStatus;
+import com.company.iam.entities.enums.MerchantTier;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

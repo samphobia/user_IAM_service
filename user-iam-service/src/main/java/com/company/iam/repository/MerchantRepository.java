@@ -1,6 +1,6 @@
 package com.company.iam.repository;
 
-import com.company.iam.merchant.Merchant;
+import com.company.iam.entities.Merchant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

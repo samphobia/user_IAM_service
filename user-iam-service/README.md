@@ -24,6 +24,9 @@ Package layout:
 
 - `com.company.iam.config`
 - `com.company.iam.auth`
+- `com.company.iam.controllers`
+- `com.company.iam.entities`
+- `com.company.iam.entities.enums`
 - `com.company.iam.user`
 - `com.company.iam.merchant`
 - `com.company.iam.role`

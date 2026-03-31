@@ -1,9 +1,9 @@
 package com.company.iam.security;
 
 import com.company.iam.repository.UserRepository;
-import com.company.iam.role.Role;
+import com.company.iam.entities.enums.Role;
 import com.company.iam.service.JwtService;
-import com.company.iam.user.User;
+import com.company.iam.entities.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

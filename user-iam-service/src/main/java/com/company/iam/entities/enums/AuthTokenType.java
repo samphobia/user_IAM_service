@@ -1,4 +1,4 @@
-package com.company.iam.auth;
+package com.company.iam.entities.enums;
 
 public enum AuthTokenType {
     EMAIL_VERIFICATION,

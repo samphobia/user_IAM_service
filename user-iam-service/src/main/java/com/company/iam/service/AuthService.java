@@ -1,8 +1,8 @@
 package com.company.iam.service;
 
 import com.company.iam.auth.AaasAuthClient;
-import com.company.iam.auth.AuthToken;
-import com.company.iam.auth.AuthTokenType;
+import com.company.iam.entities.AuthToken;
+import com.company.iam.entities.enums.AuthTokenType;
 import com.company.iam.dto.AuthResponse;
 import com.company.iam.dto.ForgotPasswordRequest;
 import com.company.iam.dto.LoginRequest;
@@ -13,12 +13,12 @@ import com.company.iam.exception.BadRequestException;
 import com.company.iam.exception.ConflictException;
 import com.company.iam.exception.NotFoundException;
 import com.company.iam.exception.UnauthorizedException;
-import com.company.iam.merchant.Merchant;
+import com.company.iam.entities.Merchant;
 import com.company.iam.repository.AuthTokenRepository;
 import com.company.iam.repository.MerchantRepository;
 import com.company.iam.repository.UserRepository;
-import com.company.iam.user.User;
-import com.company.iam.user.UserStatus;
+import com.company.iam.entities.User;
+import com.company.iam.entities.enums.UserStatus;
 import com.company.iam.util.HashingUtil;
 import com.company.iam.util.PasswordPolicyValidator;
 import lombok.RequiredArgsConstructor;

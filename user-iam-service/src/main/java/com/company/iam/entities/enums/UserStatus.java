@@ -1,4 +1,4 @@
-package com.company.iam.user;
+package com.company.iam.entities.enums;
 
 public enum UserStatus {
     ACTIVE,

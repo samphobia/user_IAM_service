@@ -1,7 +1,8 @@
-package com.company.iam.user;
+package com.company.iam.entities;
 
-import com.company.iam.merchant.Merchant;
-import com.company.iam.role.Role;
+import com.company.iam.entities.Merchant;
+import com.company.iam.entities.enums.Role;
+import com.company.iam.entities.enums.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -5,7 +5,7 @@ import com.company.iam.exception.NotFoundException;
 import com.company.iam.exception.UnauthorizedException;
 import com.company.iam.repository.UserRepository;
 import com.company.iam.security.MerchantContextHolder;
-import com.company.iam.user.User;
+import com.company.iam.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

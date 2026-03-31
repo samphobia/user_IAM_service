@@ -1,4 +1,4 @@
-package com.company.iam.role;
+package com.company.iam.entities.enums;
 
 public enum Role {
     CUSTOMER,

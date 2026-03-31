@@ -1,6 +1,6 @@
 package com.company.iam.dto;
 
-import com.company.iam.role.Role;
+import com.company.iam.entities.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

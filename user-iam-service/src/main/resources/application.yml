@@ -28,6 +28,12 @@ app:
     base-url: ${APP_AAAS_BASE_URL:http://localhost:8080}
     api-key: ${APP_AAAS_API_KEY:dev-default-api-key}
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
 logging:
   level:
     root: INFO

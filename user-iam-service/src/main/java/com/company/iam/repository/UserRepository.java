@@ -1,6 +1,6 @@
 package com.company.iam.repository;
 
-import com.company.iam.user.User;
+import com.company.iam.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

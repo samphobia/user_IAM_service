@@ -1,8 +1,8 @@
 package com.company.iam.service;
 
 import com.company.iam.config.JwtProperties;
-import com.company.iam.role.Role;
-import com.company.iam.user.User;
+import com.company.iam.entities.enums.Role;
+import com.company.iam.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
