@@ -39,8 +39,8 @@ Package layout:
 
 ## Security Model
 
-- BCrypt password hashing with strength 12
-- JWT includes `sub` (user_id), `role`, and `merchant_id`
+- AAAS performs token issuance and token validation/introspection
+- This service authenticates incoming bearer tokens by calling AAAS `/auth/me`
 - Stateless security (`SessionCreationPolicy.STATELESS`)
 - RBAC via `@PreAuthorize`
 
@@ -50,25 +50,21 @@ Package layout:
 - `MerchantContextHolder` carries user and merchant context per request
 - Merchant-scoped queries use repository filters (for example `findByIdAndMerchant_MerchantId`)
 
-## AAAS Integration
+## AAAS Dependency
 
-This service can run in two modes:
+This service is AAAS-dependent and delegates auth flows directly to KeyAuth AAAS.
 
-- Independent mode: local IAM only
-- Integrated mode: local IAM + outbound sync calls to KeyAuth AAAS for register/login
+Required properties:
 
-Properties:
-
-- `APP_AAAS_ENABLED` (`true|false`)
-- `APP_AAAS_FAIL_OPEN` (`true|false`)
 - `APP_AAAS_BASE_URL`
 - `APP_AAAS_API_KEY`
 
-When `APP_AAAS_ENABLED=true`, register/login invoke AAAS endpoints and continue locally if `APP_AAAS_FAIL_OPEN=true`.
+If either value is missing, startup fails fast.
 
 ## Required Environment Variables
 
-- `APP_JWT_SECRET` (Base64-encoded secret, mandatory)
+- `APP_AAAS_BASE_URL`
+- `APP_AAAS_API_KEY`
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
@@ -76,7 +72,6 @@ When `APP_AAAS_ENABLED=true`, register/login invoke AAAS endpoints and continue 
 Optional:
 
 - `SERVER_PORT` (default `8090`)
-- `APP_JWT_EXPIRATION_MS` (default `3600000`)
 
 ## Endpoints
 

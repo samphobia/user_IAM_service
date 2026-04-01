@@ -1,9 +1,7 @@
 package com.company.iam.security;
 
-import com.company.iam.repository.UserRepository;
-import com.company.iam.entities.enums.Role;
-import com.company.iam.service.JwtService;
-import com.company.iam.entities.User;
+import com.company.iam.auth.AaasAuthClient;
+import com.company.iam.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -26,8 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final AaasAuthClient aaasAuthClient;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -38,28 +35,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             if (header != null && header.startsWith(BEARER)) {
                 String token = header.substring(BEARER.length());
-                if (jwtService.validateToken(token)) {
-                    UUID userId = jwtService.extractUserId(token);
-                    User user = userRepository.findById(userId).orElse(null);
-                    if (user != null) {
-                        Role role = jwtService.extractRole(token);
-                        UUID merchantId = jwtService.extractMerchantId(token);
+                AaasAuthClient.ValidatedPrincipal principal = aaasAuthClient.validateAccessToken(token);
 
-                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                                userId.toString(),
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
-                        );
+                Set<SimpleGrantedAuthority> authorities = principal.roles().stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                        .collect(Collectors.toSet());
 
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                        MerchantContextHolder.set(userId, merchantId);
-                    }
-                }
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        principal.principal(),
+                        null,
+                        authorities
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                MerchantContextHolder.set(null, principal.tenantId());
             }
 
             filterChain.doFilter(request, response);
+        } catch (UnauthorizedException ex) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"" + ex.getMessage() + "\"}");
         } finally {
             MerchantContextHolder.clear();
+            SecurityContextHolder.clearContext();
         }
     }
 }

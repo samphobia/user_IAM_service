@@ -19,14 +19,9 @@ spring:
     enabled: true
 
 app:
-  jwt:
-    secret: ${APP_JWT_SECRET:}
-    expiration-ms: ${APP_JWT_EXPIRATION_MS:3600000}
   aaas:
-    enabled: ${APP_AAAS_ENABLED:false}
-    fail-open: ${APP_AAAS_FAIL_OPEN:true}
-    base-url: ${APP_AAAS_BASE_URL:http://localhost:8080}
-    api-key: ${APP_AAAS_API_KEY:dev-default-api-key}
+    base-url: ${APP_AAAS_BASE_URL:}
+    api-key: ${APP_AAAS_API_KEY:}
 
 springdoc:
   api-docs:

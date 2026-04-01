@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    @Operation(summary = "Register user", description = "Registers a new user with PENDING_EMAIL_VERIFICATION status")
+    @Operation(summary = "Register user", description = "Delegates user registration to AAAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Registration accepted"),
             @ApiResponse(responseCode = "409", description = "Email already exists"),
@@ -39,7 +39,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Login", description = "Authenticates user and returns JWT")
+    @Operation(summary = "Login", description = "Delegates login to AAAS and returns token payload")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login successful"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
@@ -49,7 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify-email")
-    @Operation(summary = "Verify email", description = "Verifies email with short-lived OTP token")
+    @Operation(summary = "Verify email", description = "Delegates email verification to AAAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email verification successful"),
             @ApiResponse(responseCode = "400", description = "Invalid or expired token")
@@ -60,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    @Operation(summary = "Forgot password", description = "Issues a password-reset OTP token")
+    @Operation(summary = "Forgot password", description = "Delegates password reset initiation to AAAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Reset token issued"),
             @ApiResponse(responseCode = "404", description = "User not found")
@@ -71,7 +71,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    @Operation(summary = "Reset password", description = "Resets password using a valid reset token")
+    @Operation(summary = "Reset password", description = "Delegates password reset completion to AAAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Password reset successful"),
             @ApiResponse(responseCode = "400", description = "Invalid or expired token")
