@@ -2,11 +2,9 @@ package com.company.iam.service;
 
 import com.company.iam.auth.AaasAuthClient;
 import com.company.iam.dto.AuthResponse;
-import com.company.iam.dto.ForgotPasswordRequest;
 import com.company.iam.dto.LoginRequest;
+import com.company.iam.dto.RefreshTokenRequest;
 import com.company.iam.dto.RegisterRequest;
-import com.company.iam.dto.ResetPasswordRequest;
-import com.company.iam.dto.VerifyEmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,16 +41,14 @@ public class AuthService {
                 .build();
     }
 
-    public void verifyEmail(VerifyEmailRequest request) {
-        aaasAuthClient.verifyEmail(request);
-    }
-
-    public void forgotPassword(ForgotPasswordRequest request) {
-        aaasAuthClient.forgotPassword(request.getEmail());
-    }
-
-    public void resetPassword(ResetPasswordRequest request) {
-        aaasAuthClient.resetPassword(request);
+    public AuthResponse refresh(RefreshTokenRequest request) {
+        Map<String, Object> refreshResponse = aaasAuthClient.refresh(request);
+        return AuthResponse.builder()
+                .token(parseString(refreshResponse.get("accessToken")))
+                .refreshToken(parseString(refreshResponse.get("refreshToken")))
+                .expiresIn(parseLong(refreshResponse.get("expiresIn")))
+                .tokenType("Bearer")
+                .build();
     }
 
     private UUID parseUuid(Object value) {

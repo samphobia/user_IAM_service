@@ -30,7 +30,6 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/verify-email").permitAll()
                         .requestMatchers("/api/v1/merchants/register").permitAll()
                         .anyRequest().authenticated()
                 )

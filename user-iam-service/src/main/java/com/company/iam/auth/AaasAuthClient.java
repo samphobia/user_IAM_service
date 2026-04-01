@@ -2,11 +2,11 @@ package com.company.iam.auth;
 
 import com.company.iam.config.AaasProperties;
 import com.company.iam.dto.LoginRequest;
+import com.company.iam.dto.RefreshTokenRequest;
 import com.company.iam.dto.RegisterRequest;
-import com.company.iam.dto.ResetPasswordRequest;
-import com.company.iam.dto.VerifyEmailRequest;
 import com.company.iam.exception.BadRequestException;
 import com.company.iam.exception.UnauthorizedException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -27,6 +27,18 @@ public class AaasAuthClient {
 
     private final RestClient restClient;
     private final AaasProperties aaasProperties;
+
+    @PostConstruct
+    void checkAaasConnectivity() {
+        try {
+            restClient.get()
+                    .uri(aaasProperties.getBaseUrl() + "/actuator/health")
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception ex) {
+            throw new IllegalStateException("Unable to connect to AAAS service at APP_AAAS_BASE_URL", ex);
+        }
+    }
 
     public record ValidatedPrincipal(String principal, UUID tenantId, Set<String> roles) {
     }
@@ -75,16 +87,21 @@ public class AaasAuthClient {
         }
     }
 
-    public void verifyEmail(VerifyEmailRequest request) {
-        postWithoutResponse("/verify-email", Map.of("email", request.getEmail(), "otp", request.getOtp()));
-    }
-
-    public void forgotPassword(String email) {
-        postWithoutResponse("/auth/forgot-password", Map.of("email", email));
-    }
-
-    public void resetPassword(ResetPasswordRequest request) {
-        postWithoutResponse("/auth/reset-password", Map.of("token", request.getToken(), "newPassword", request.getNewPassword()));
+    public Map<String, Object> refresh(RefreshTokenRequest request) {
+        try {
+            return restClient.post()
+                    .uri(aaasProperties.getBaseUrl() + "/auth/refresh")
+                    .header("X-API-KEY", aaasProperties.getApiKey())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("refreshToken", request.getRefreshToken()))
+                    .retrieve()
+                    .body(Map.class);
+        } catch (RestClientResponseException ex) {
+            if (ex.getStatusCode().value() == 401) {
+                throw new UnauthorizedException("Invalid refresh token");
+            }
+            throw new BadRequestException("AAAS refresh request failed");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -127,21 +144,6 @@ public class AaasAuthClient {
                 throw new UnauthorizedException("Invalid bearer token");
             }
             throw new BadRequestException("AAAS token validation failed");
-        }
-    }
-
-    private void postWithoutResponse(String path, Map<String, Object> body) {
-        try {
-            restClient.post()
-                    .uri(aaasProperties.getBaseUrl() + path)
-                    .header("X-API-KEY", aaasProperties.getApiKey())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(body)
-                    .retrieve()
-                    .toBodilessEntity();
-        } catch (RestClientResponseException ex) {
-            log.warn("AAAS request failed path={} status={}", path, ex.getStatusCode());
-            throw new BadRequestException("AAAS request failed for " + path);
         }
     }
 
