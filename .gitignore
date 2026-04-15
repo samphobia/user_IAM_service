@@ -1,21 +1,25 @@
 # macOS
 .DS_Store
 
-# IDE/editor
+# IDE / Editor
+.vscode/
 .idea/
 *.iml
 *.ipr
 *.iws
-.vscode/*
-!.vscode/settings.json
 
-# Metals / Bloop / Scala tooling artifacts
+# Scala/Metals/Bloop
 .metals/
 .bloop/
 .amm/
+.ammonite/
 
-# Maven / Java build outputs
+# Java / Maven / Gradle
 **/target/
+**/build/
+**/.classpath
+**/.project
+**/.settings/
 *.class
 *.jar
 *.war
@@ -25,11 +29,15 @@
 *.log
 logs/
 
+# Environment / local config
+.env
+.env.*
+*.local
+
+# OS temp
+Thumbs.db
+
 # Temp files
 *.tmp
 *.swp
 *.swo
-
-# Environment/local overrides
-.env
-.env.*

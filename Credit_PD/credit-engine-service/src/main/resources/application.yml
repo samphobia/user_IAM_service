@@ -1,0 +1,51 @@
+server:
+  port: ${SERVER_PORT:8092}
+
+spring:
+  application:
+    name: credit-engine-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/credit_engine}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+integration:
+  iam:
+    base-url: ${IAM_BASE_URL:http://localhost:8090}
+  mono:
+    base-url: ${MONO_BASE_URL:https://api.withmono.com}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+credit:
+  scoring:
+    minimum-income-threshold: ${CREDIT_MINIMUM_INCOME_THRESHOLD:100000}
+    max-dti-percent: ${CREDIT_MAX_DTI_PERCENT:40}
+    max-payday-sweep-percent: ${CREDIT_MAX_PAYDAY_SWEEP_PERCENT:80}
+    base-limit-multiplier: ${CREDIT_BASE_LIMIT_MULTIPLIER:0.3}
+  certificate:
+    ttl-minutes: ${CREDIT_CERTIFICATE_TTL_MINUTES:15}
+  bank-link:
+    session-ttl-minutes: ${CREDIT_BANK_LINK_SESSION_TTL_MINUTES:10}
+
+encryption:
+  key: ${CREDIT_ENCRYPTION_KEY:0123456789abcdef}
+
+logging:
+  level:
+    root: INFO
+    com.company.credit: INFO

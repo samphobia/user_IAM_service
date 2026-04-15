@@ -51,6 +51,18 @@ public class AuthService {
                 .build();
     }
 
+    public void forgotPassword(String email) {
+        aaasAuthClient.forgotPassword(email);
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        aaasAuthClient.resetPassword(token, newPassword);
+    }
+
+    public void changePassword(String principalName, String accessToken, String currentPassword, String newPassword) {
+        aaasAuthClient.changePassword(principalName, accessToken, currentPassword, newPassword);
+    }
+
     private UUID parseUuid(Object value) {
         if (!(value instanceof String raw) || raw.isBlank()) {
             return null;

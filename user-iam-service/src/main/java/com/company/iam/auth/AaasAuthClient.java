@@ -15,6 +15,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestClient;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -101,6 +102,59 @@ public class AaasAuthClient {
                 throw new UnauthorizedException("Invalid refresh token");
             }
             throw new BadRequestException("AAAS refresh request failed");
+        }
+    }
+
+    public void forgotPassword(String email) {
+        try {
+            restClient.post()
+                    .uri(aaasProperties.getBaseUrl() + "/auth/forgot-password")
+                    .header("X-API-KEY", aaasProperties.getApiKey())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("email", email))
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (RestClientResponseException ex) {
+            throw new BadRequestException("AAAS forgot-password request failed");
+        }
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        try {
+            restClient.post()
+                    .uri(aaasProperties.getBaseUrl() + "/auth/reset-password")
+                    .header("X-API-KEY", aaasProperties.getApiKey())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("token", token, "newPassword", newPassword))
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (RestClientResponseException ex) {
+            throw new BadRequestException("AAAS reset-password request failed");
+        }
+    }
+
+    public void changePassword(String principalName, String accessToken, String currentPassword, String newPassword) {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("currentPassword", currentPassword);
+        payload.put("newPassword", newPassword);
+        if (principalName != null && !principalName.isBlank()) {
+            payload.put("principal", principalName);
+        }
+
+        try {
+            restClient.post()
+                    .uri(aaasProperties.getBaseUrl() + "/auth/change-password")
+                    .header("X-API-KEY", aaasProperties.getApiKey())
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(payload)
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (RestClientResponseException ex) {
+            if (ex.getStatusCode().value() == 401) {
+                throw new UnauthorizedException("Invalid bearer token or current password");
+            }
+            throw new BadRequestException("AAAS change-password request failed");
         }
     }
 
